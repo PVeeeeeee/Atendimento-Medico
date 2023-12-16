@@ -67,3 +67,5 @@ Route::post('/consultas/store', [ConsultaController::class, 'store'])->name('con
 
 Route::post('/consultas', [ConsultaController::class, 'store'])->name('consultas.store');
 Route::get('/consultas', [ConsultaController::class, 'index'])->name('consultas.index');
+
+Route::delete('/consultas/{consulta}', [ConsultaController::class, 'destroy'])->name('consultas.destroy');

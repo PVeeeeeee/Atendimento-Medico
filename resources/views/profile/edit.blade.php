@@ -12,12 +12,12 @@
 
             <div class="form-group">
                 <label for="nome">Nome</label>
-                <input type="text" name="nome" id="nome" class="form-control" value="{{ Auth::user()->nome }}" required>
+                <input type="text" name="nome" id="nome" class="form-control" value="{{ Auth::user()->nome }}" >
             </div>
 
             <div class="form-group">
                 <label for="email">E-mail</label>
-                <input type="email" name="email" id="email" class="form-control" value="{{ Auth::user()->email }}" required>
+                <input type="email" name="email" id="email" class="form-control" value="{{ Auth::user()->email }}" >
             </div>
 
             <div class="form-group">

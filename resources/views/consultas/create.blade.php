@@ -1,5 +1,3 @@
-<!-- resources/views/consultas/create.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
@@ -15,18 +13,24 @@
         <form method="post" action="{{ route('consultas.store') }}">
             @csrf
 
-            <!-- Campo para usuário comum -->
-            <div class="form-group">
-                <label for="usuario_comum_id">Usuário Comum:</label>
-                <input type="text" name="usuario_comum_id" class="form-control" value="{{ Auth::user()->nome }}" readonly>
-            </div>
+            <!-- Campo para usuário comum (apenas visível para admin e médicos) -->
+            @if(Auth::user()->tipo === 'admin' || Auth::user()->tipo === 'medico')
+                <div class="form-group">
+                    <label for="usuario_comum_id">Usuário Comum:</label>
+                    <select name="usuario_comum_id" class="form-control">
+                        @foreach ($usuariosComuns as $comum)
+                            <option value="{{ $comum->id }}">{{ $comum->nome }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
 
-            <!-- Campo para usuário médico (lista de usuários médicos) -->
+            <!-- Campo para usuário médico -->
             <div class="form-group">
                 <label for="usuario_medico_id">Usuário Médico:</label>
                 <select name="usuario_medico_id" class="form-control">
                     @foreach ($usuariosMedicos as $medico)
-                        <option value="{{ $medico->id }}">{{ $medico->nome }}</option>
+                        <option value="{{ $medico->id }}">{{ $medico->nome }} ({{ $medico->funcao }})</option>
                     @endforeach
                 </select>
             </div>
@@ -43,6 +47,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Agendar Consulta</button>
+            <a href="{{ route('home') }}" class="btn btn-primary">Voltar</a>
         </form>
     </div>
 @endsection

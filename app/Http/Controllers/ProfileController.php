@@ -39,31 +39,47 @@ class ProfileController extends Controller
         public function update(Request $request)
         {
             $user = Auth::user();
-    
+
             if ($user) {
-                $this->validate($request, [
-                    'nome' => 'required|string|max:255',
-                    'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-                ]);
-    
-                $user->nome = $request->input('nome');
-                $user->email = $request->input('email');
-    
-                if ($request->has('password')) {
-                    $this->validate($request, [
-                        'password' => 'required|string|min:6|confirmed',
-                    ]);
-    
+                // Criar regras de validação dinamicamente com base nos campos fornecidos
+                $rules = [];
+                
+                if ($request->filled('nome')) {
+                    $rules['nome'] = 'string|max:255';
+                }
+
+                if ($request->filled('email')) {
+                    $rules['email'] = 'string|email|max:255|unique:users,email,' . $user->id;
+                }
+
+                if ($request->filled('password')) {
+                    $rules['password'] = 'string|min:6|confirmed';
+                }
+
+                $this->validate($request, $rules);
+
+                // Atualizar apenas os campos fornecidos
+                if ($request->filled('nome')) {
+                    $user->nome = $request->input('nome');
+                }
+
+                if ($request->filled('email')) {
+                    $user->email = $request->input('email');
+                }
+
+                if ($request->filled('password')) {
                     $user->password = Hash::make($request->input('password'));
                 }
-            /** @var \App\Models\User $user **/
+
+                /** @var \App\Models\User $user **/
                 $user->save();
-    
+
                 return redirect('/home')->with('success', 'Perfil atualizado com sucesso!');
             }
-    
+
             return redirect('/')->with('error', 'Usuário não autenticado ou não encontrado.');
         }
+      
 
         public function editUser($userId)
         {
@@ -78,37 +94,48 @@ class ProfileController extends Controller
         }
 
         public function updateUser(Request $request, $userId)
-        {
-            // $user = Auth::user();
-            $user = DB::table('users')->where('id', $userId)->first();
+{
+    $adminUser = Auth::user();
+    $user = User::find($userId);
 
-            if ($user->tipo == 'admin') {
-                $this->validate($request, [
-                    'nome' => 'required|string|max:255',
-                    'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-                    'cpf' => 'required|string|max:11|unique:users,cpf,' . $user->id,
-                    'data_nasc' => 'required|date',
-                    'tipo' => 'required|in:admin,comun,medico',
-                    'password' => 'nullable|string|min:6|confirmed',
-                ]);
-                $user = new User();
-                
+    if ($adminUser && $adminUser->tipo == 'admin' && $user) {
+        $this->validate($request, [
+            'nome' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'cpf' => 'required|string|max:11|unique:users,cpf,' . $user->id,
+            'data_nasc' => 'required|date',
+            'tipo' => 'required|in:admin,comum,medico',
+            'funcao' => 'required|string',
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
 
-                $user->nome = $request->input('nome');
-                $user->email = $request->input('email');
-                $user->cpf = $request->input('cpf');
-                $user->data_nasc = $request->input('data_nasc');
-                $user->tipo = $request->input('tipo');
+        $user->nome = $request->input('nome');
+        $user->email = $request->input('email');
+        $user->cpf = $request->input('cpf');
+        $user->data_nasc = $request->input('data_nasc');
+        $user->tipo = $request->input('tipo');
 
-                if ($request->filled('password')) {
-                    $user->password = Hash::make($request->input('password'));
-                }
-                    /** @var \App\Models\User $user **/
-                $user->save();
+        if ($user->tipo == 'medico') {
+            $this->validate($request, [
+                'funcao' => 'required|string|not_in:Paciente,Administrador',
+            ]);
+        }if ($user->tipo == 'admin') {
+            $user->funcao = 'Administrador';
+        } elseif ($user->tipo == 'comum') {
+            $user->funcao = 'Paciente';
+        } 
 
-                return redirect(route('admin.showUser', $user->id))->with('success', 'Perfil atualizado com sucesso!');
-            }
-
-            return redirect('/')->with('error', 'Usuário não autenticado ou não encontrado.');
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
         }
+
+        $user->save();
+
+        return redirect()->route('admin.showUser', $user->id)->with('success', 'Perfil atualizado com sucesso!');
+    }
+
+    return redirect()->back()->with('error', 'Erro ao atualizar o perfil.');
+}
+
+
 }

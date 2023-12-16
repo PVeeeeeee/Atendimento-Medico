@@ -10,6 +10,7 @@
         <p>Email: {{ $user->email }}</p>
         <p>CPF: {{ $user->cpf }}</p>
         <p>Tipo: {{ $user->tipo }}</p>
+        <p>Função: {{ $user->funcao }}</p>
         <p>Data de Nascimento: {{ $user->data_nasc }}</p>
         <p>Data de Registro: {{ $user->created_at->format('d/m/Y H:i:s') }}</p>
 

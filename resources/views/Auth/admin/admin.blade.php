@@ -25,6 +25,7 @@
                     <div class="user-info">
                         <strong>Nome:</strong> {{ $user->nome }}<br>
                         <strong>Tipo:</strong> {{ $user->tipo }}<br>
+                        <strong>Função:</strong> {{ $user->funcao }}<br>
                         <strong>Data de Registro:</strong> {{ $user->created_at->format('d/m/Y H:i:s') }}<br>
                     </div>
                     <div class="user-actions">

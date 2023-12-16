@@ -16,6 +16,7 @@ class CreateUsersTable extends Migration
             $table->string('cpf', 11)->unique();
             $table->string('password');
             $table->enum('tipo', ['comum', 'admin', 'medico'])->default('comum');
+            $table->string('funcao')->default('paciente');
             $table->rememberToken();
             $table->timestamps();
         });

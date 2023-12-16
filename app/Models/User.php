@@ -23,7 +23,8 @@ class User extends Authenticatable
         'cpf',
         'data_nasc',
         'password',
-        'tipo'
+        'tipo',
+        'funcao'
     ];
 
     // ...

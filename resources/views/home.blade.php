@@ -22,7 +22,7 @@
                                 @if(auth()->user()->tipo === 'admin')
                                 <form method="get" action="{{ route('admin.index') }}">
                                     @csrf
-                                    <button type="submit" class="btn btn-danger">Apenas para Admins</button>
+                                    <button type="submit" class="btn btn-danger">Lista de Usuários</button>
                                 </form>
                                 @endif
 
