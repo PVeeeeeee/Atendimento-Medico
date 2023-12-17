@@ -94,48 +94,47 @@ class ProfileController extends Controller
         }
 
         public function updateUser(Request $request, $userId)
-{
-    $adminUser = Auth::user();
-    $user = User::find($userId);
+        {
+            $adminUser = Auth::user();
+            $user = User::find($userId);
 
-    if ($adminUser && $adminUser->tipo == 'admin' && $user) {
-        $this->validate($request, [
-            'nome' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'cpf' => 'required|string|max:11|unique:users,cpf,' . $user->id,
-            'data_nasc' => 'required|date',
-            'tipo' => 'required|in:admin,comum,medico',
-            'funcao' => 'required|string',
-            'password' => 'nullable|string|min:6|confirmed',
-        ]);
+            if ($adminUser && $adminUser->tipo == 'admin' && $user) {
+                $this->validate($request, [
+                    'nome' => 'required|string|max:255',
+                    'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+                    'cpf' => 'required|string|max:11|unique:users,cpf,' . $user->id,
+                    'data_nasc' => 'required|date',
+                    'tipo' => 'required|in:admin,comum,medico',
+                    'funcao' => 'required|string',
+                    'password' => 'nullable|string|min:6|confirmed',
+                ]);
 
-        $user->nome = $request->input('nome');
-        $user->email = $request->input('email');
-        $user->cpf = $request->input('cpf');
-        $user->data_nasc = $request->input('data_nasc');
-        $user->tipo = $request->input('tipo');
+                $user->nome = $request->input('nome');
+                $user->email = $request->input('email');
+                $user->cpf = $request->input('cpf');
+                $user->data_nasc = $request->input('data_nasc');
+                $user->tipo = $request->input('tipo');
 
-        if ($user->tipo == 'medico') {
-            $this->validate($request, [
-                'funcao' => 'required|string|not_in:Paciente,Administrador',
-            ]);
-        }if ($user->tipo == 'admin') {
-            $user->funcao = 'Administrador';
-        } elseif ($user->tipo == 'comum') {
-            $user->funcao = 'Paciente';
-        } 
 
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->input('password'));
+                if ($user->tipo == 'medico') {
+                    $user->funcao = $request->input('funcao') ?: null;
+                }if ($user->tipo == 'admin') {
+                    $user->funcao = 'Administrador';
+                } elseif ($user->tipo == 'comum') {
+                    $user->funcao = 'Paciente';
+                } 
+
+                if ($request->filled('password')) {
+                    $user->password = Hash::make($request->input('password'));
+                }
+
+                $user->save();
+
+                return redirect()->route('admin.showUser', $user->id)->with('success', 'Perfil atualizado com sucesso!');
+            }
+
+            return redirect()->back()->with('error', 'Erro ao atualizar o perfil.');
         }
-
-        $user->save();
-
-        return redirect()->route('admin.showUser', $user->id)->with('success', 'Perfil atualizado com sucesso!');
-    }
-
-    return redirect()->back()->with('error', 'Erro ao atualizar o perfil.');
-}
 
 
 }
