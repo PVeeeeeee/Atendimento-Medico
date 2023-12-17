@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,11 +10,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    public function isAdmin()
-    {
-        // Lógica para verificar se o usuário é um administrador
-        return $this->tipo === 'admin'; // Certifique-se de ajustar isso conforme sua estrutura de dados
-    }
+    // ...
 
     protected $fillable = [
         'nome',
@@ -48,24 +43,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-    public function consultasComum()
+
+
+    protected static function newFactory()
     {
-        return $this->hasMany(Consulta::class, 'user_comum_id');
+        return \Database\Factories\UserFactory::new();
     }
 
-    // Relacionamento com consultas como médico
-    public function consultasMedico()
+    public function isAdmin()
     {
-        return $this->hasMany(Consulta::class, 'user_medico_id');
-    }
-
-    public function consultasComuns()
-    {
-        return $this->hasMany(Consulta::class, 'user_comum_id');
-    }
-
-    public function consultasMedicas()
-    {
-        return $this->hasMany(Consulta::class, 'user_medico_id');
+        return $this->tipo === 'admin';
     }
 }

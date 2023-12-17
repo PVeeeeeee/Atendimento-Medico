@@ -50,23 +50,23 @@ class ConsultaController extends Controller
     }
 
     public function index()
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    if ($user->tipo == 'admin') {
-        $consultas = Consulta::with('usuarioMedico')->get();
-    } elseif ($user->tipo == 'medico') {
-        $consultas = Consulta::where('user_medico_id', $user->id)
-            ->with('usuarioMedico')
-            ->get();
-    } else {
-        $consultas = Consulta::where('user_comum_id', $user->id)
-            ->with('usuarioMedico')
-            ->get();
+        if ($user->tipo == 'admin') {
+            $consultas = Consulta::with('usuarioMedico')->get();
+        } elseif ($user->tipo == 'medico') {
+            $consultas = Consulta::where('user_medico_id', $user->id)
+                ->with('usuarioMedico')
+                ->get();
+        } else {
+            $consultas = Consulta::where('user_comum_id', $user->id)
+                ->with('usuarioMedico')
+                ->get();
+        }
+
+        return view('consultas.index', compact('consultas'));
     }
-
-    return view('consultas.index', compact('consultas'));
-}
 
     public function destroy($consultaId)
     {

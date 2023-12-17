@@ -16,7 +16,7 @@
             <!-- Campo para usuário comum (apenas visível para admin e médicos) -->
             @if(Auth::user()->tipo === 'admin' || Auth::user()->tipo === 'medico')
                 <div class="form-group">
-                    <label for="usuario_comum_id">Usuário Comum:</label>
+                    <label for="usuario_comum_id">Paciente:</label>
                     <select name="usuario_comum_id" class="form-control">
                         @foreach ($usuariosComuns as $comum)
                             <option value="{{ $comum->id }}">{{ $comum->nome }}</option>
@@ -27,7 +27,7 @@
 
             <!-- Campo para usuário médico -->
             <div class="form-group">
-                <label for="usuario_medico_id">Usuário Médico:</label>
+                <label for="usuario_medico_id">Médico:</label>
                 <select name="usuario_medico_id" class="form-control">
                     @foreach ($usuariosMedicos as $medico)
                         <option value="{{ $medico->id }}">{{ $medico->nome }} ({{ $medico->funcao }})</option>

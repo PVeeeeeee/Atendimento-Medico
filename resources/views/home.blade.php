@@ -7,7 +7,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow">
-                    <div class="card-header bg-primary text-white">Dashboard Médico</div>
+                    <div class="card-header bg-primary text-white">Dashboard</div>
 
                     <div class="card-body">
                         @if (Auth::check())
