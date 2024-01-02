@@ -30,7 +30,7 @@
                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" minlength="6">
             </div>
 
-            <button type="submit" class="btn btn-primary">Atualizar Perfil</button>
+            <button type="submit" class="btn btn-success">Atualizar Perfil</button>
         </form>
     </div>
 @endsection
